@@ -45,11 +45,11 @@ module.exports.signIn = async (req, res) => {
     try {
         let user = await User.findOne({ email: req.body.email });
         if (!user) {
-            return res.status(400).send({ message: "Email does not exists!" });
+            return res.status(400).send({ email: "Email does not exists!" });
         } else {
             const validUser = await bcrypt.compare(req.body.password, user.password);
             if (!validUser) {
-                return res.status(400).send({ message: "Password does not match!" });
+                return res.status(400).send({ password: "Password does not match!" });
             } else {
                 const token = user.genJWT();
 
