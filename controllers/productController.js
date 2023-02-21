@@ -162,38 +162,46 @@ module.exports.deleteProduct = async (req, res) => {
 // Filter by any fields
 
 module.exports.filterProducts = async (req, res) => {
-    const order = req.body.order === "desc" ? -1 : 1;
-    const sortBy = req.body.sortBy ? req.query.sortBy : 'createdAt';
-    const limit = req.body.limit ? parseInt(req.query.limit) : 10;
-    const skip = parseInt(req.body.skip);
-    const filters = req.body.filters;
-    const args = {};
+    try {
+        const order = req.body.order === "desc" ? -1 : 1;
+        const sortBy = req.body.sortBy ? req.query.sortBy : 'createdAt';
+        const limit = req.body.limit ? parseInt(req.query.limit) : 10;
+        const skip = parseInt(req.body.skip);
+        const filters = req.body.filters;
+        const args = {};
 
-    for (const key in filters) {
-        if (filters[key].length > 0) {
-            switch(key) {
-                case 'price':
-                    args.price = {
-                        $gte: filters.price[0],
-                        $lte: filters.price[1]
-                    }
-                    break;
-                case 'category':
-                    args.category = {
-                        $in: filters.category
-                    }
-                    break;
-                default:
-                    return;
+        for (const key in filters) {
+            if (filters[key].length > 0) {
+                switch(key) {
+                    case 'price':
+                        args.price = {
+                            $gte: filters.price[0],
+                            $lte: filters.price[1]
+                        }
+                        break;
+                    case 'category':
+                        args.category = {
+                            $in: filters.category
+                        }
+                        break;
+                    default:
+                        return;
+                }
             }
         }
+    
+        const products = await Product.find(args)
+            .select({photo: 0})
+            .populate('category', 'name')
+            .sort({[sortBy]: order})
+            .limit(limit)
+            .skip(skip);
+        if (products.length > 0) {
+            return res.status(200).send(products);
+        } else {
+            return res.status(200).send({message: "No product available!"});
+        }
+    } catch (error) {
+        return res.status(400).send({message: "Failed to fetch products!"});
     }
-   
-    const products = await Product.find(args)
-        .select({photo: 0})
-        .populate('category', 'name')
-        .sort({[sortBy]: order})
-        .limit(limit)
-        .skip(skip);
-    return res.status(200).send(products);
 }
