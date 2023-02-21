@@ -57,7 +57,7 @@ module.exports.getProducts = async (req, res) => {
     try {
         if (await Product.count() > 0) {
             const order = req.query.order === "desc" ? -1 : 1;
-            const sortBy = req.query.sortBy ? req.query.sortBy : '_id';
+            const sortBy = req.query.sortBy ? req.query.sortBy : 'createdAt';
             const limit = req.query.limit ? parseInt(req.query.limit) : 10;
             const products = await Product.find()
                 .select({photo: 0})
