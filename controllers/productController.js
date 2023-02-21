@@ -163,7 +163,7 @@ module.exports.deleteProduct = async (req, res) => {
 
 module.exports.filterProducts = async (req, res) => {
     const order = req.body.order === "desc" ? -1 : 1;
-    const sortBy = req.body.sortBy ? req.query.sortBy : '_id';
+    const sortBy = req.body.sortBy ? req.query.sortBy : 'createdAt';
     const limit = req.body.limit ? parseInt(req.query.limit) : 10;
     const skip = parseInt(req.body.skip);
     const filters = req.body.filters;
