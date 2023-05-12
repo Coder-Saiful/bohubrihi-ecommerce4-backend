@@ -1,8 +1,21 @@
 const router = require('express').Router();
-const { initPayment } = require('../controllers/paymentController');
+const {
+    initPayment,
+    ipn,
+    paymentSuccess,
+    paymentFail,
+    paymentCancel
+} = require('../controllers/paymentController');
 const authorize = require('../middlewares/authorize');
 
-router.route(`/`)
-    .get(authorize, initPayment);
+router.get('/', authorize, initPayment);
+
+router.post('/ipn', ipn);
+
+router.post('/success', paymentSuccess);
+
+router.post('/fail', paymentFail);
+
+router.post('/cancel', paymentCancel);
 
 module.exports = router;

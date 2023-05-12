@@ -81,3 +81,20 @@ module.exports.initPayment = async (req, res) => {
     const response = await payment.paymentInit();
     return res.status(200).send(response);
 }
+
+module.exports.ipn = (req, res) => {
+    console.log(req.body)
+}
+
+module.exports.paymentSuccess = (req, res) => {
+    res.redirect('http://localhost:3000/payment/success');
+}
+
+module.exports.paymentFail = (req, res) => {
+    res.redirect('http://localhost:3000/payment/fail');
+}
+
+
+module.exports.paymentCancel = (req, res) => {
+    res.redirect('http://localhost:3000/payment/cancel');
+}
