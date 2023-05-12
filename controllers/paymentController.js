@@ -83,7 +83,7 @@ module.exports.initPayment = async (req, res) => {
 }
 
 module.exports.ipn = (req, res) => {
-    
+    console.log(req.body);
 }
 
 // module.exports.paymentSuccess = (req, res) => {
