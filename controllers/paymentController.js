@@ -82,19 +82,19 @@ module.exports.initPayment = async (req, res) => {
     return res.status(200).send(response);
 }
 
-module.exports.ipn = (req, res) => {
+module.exports.ipn = async (req, res) => {
     console.log(req.body);
 }
 
-module.exports.paymentSuccess = (req, res) => {
+module.exports.paymentSuccess = async (req, res) => {
     res.redirect('http://localhost:3000/payment/success');
 }
 
-module.exports.paymentFail = (req, res) => {
+module.exports.paymentFail = async (req, res) => {
     res.redirect('http://localhost:3000/payment/fail');
 }
 
 
-module.exports.paymentCancel = (req, res) => {
+module.exports.paymentCancel = async (req, res) => {
     res.redirect('http://localhost:3000/payment/cancel');
 }
