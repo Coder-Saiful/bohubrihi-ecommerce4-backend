@@ -29,10 +29,10 @@ module.exports.initPayment = async (req, res) => {
 
     // Set the urls
     payment.setUrls({
-        success: 'https://bohubrihi-ecommerce4-backend.onrender.com/payment/success',
-        fail: 'https://bohubrihi-ecommerce4-backend.onrender.com/payment/fail',
-        cancel: 'https://bohubrihi-ecommerce4-backend.onrender.com/payment/cancel',
-        ipn: 'https://bohubrihi-ecommerce4-backend.onrender.com/payment/ipn'
+        success: 'https://bohubrihi-ecommerce4-backend.onrender.com/api/payment/success',
+        fail: 'https://bohubrihi-ecommerce4-backend.onrender.com/api/payment/fail',
+        cancel: 'https://bohubrihi-ecommerce4-backend.onrender.com/api/payment/cancel',
+        ipn: 'https://bohubrihi-ecommerce4-backend.onrender.com/api/payment/ipn'
     });
 
     // Set order details
@@ -88,13 +88,13 @@ module.exports.ipn = async (req, res) => {
 }
 
 module.exports.paymentSuccess = async (req, res) => {
-    res.send("<h1>payment success</h1>");
+    res.redirect('http://localhost:3000/payment/success');
 }
 
 module.exports.paymentFail = async (req, res) => {
-    res.send("<h1>payment fail</h1>");
+    res.redirect('http://localhost:3000/payment/fail');
 }
 
 module.exports.paymentCancel = async (req, res) => {
-    res.send("<h1>payment cancel</h1>");   
+    res.redirect('http://localhost:3000/payment/cancel');  
 }
