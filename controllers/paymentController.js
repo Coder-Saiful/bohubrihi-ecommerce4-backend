@@ -29,10 +29,10 @@ module.exports.initPayment = async (req, res) => {
 
     // Set the urls
     payment.setUrls({
-        success: 'http://localhost:3000/payment/success',
-        fail: 'http://localhost:3000/payment/fail',
-        cancel: 'http://localhost:3000/payment/cancel',
-        ipn: 'http://localhost:3000/payment/ipn',
+        success: 'https://bohubrihi-ecommerce4-backend.onrender.com/payment/success',
+        fail: 'https://bohubrihi-ecommerce4-backend.onrender.com/payment/fail',
+        cancel: 'https://bohubrihi-ecommerce4-backend.onrender.com/payment/cancel',
+        ipn: 'https://bohubrihi-ecommerce4-backend.onrender.com/payment/ipn'
     });
 
     // Set order details
@@ -86,15 +86,15 @@ module.exports.ipn = (req, res) => {
     console.log(req.body);
 }
 
-// module.exports.paymentSuccess = (req, res) => {
-//     res.redirect('http://localhost:3000/payment/success');
-// }
+module.exports.paymentSuccess = (req, res) => {
+    res.redirect('http://localhost:3000/payment/success');
+}
 
-// module.exports.paymentFail = (req, res) => {
-//     res.redirect('http://localhost:3000/payment/fail');
-// }
+module.exports.paymentFail = (req, res) => {
+    res.redirect('http://localhost:3000/payment/fail');
+}
 
 
-// module.exports.paymentCancel = (req, res) => {
-//     res.redirect('http://localhost:3000/payment/cancel');
-// }
+module.exports.paymentCancel = (req, res) => {
+    res.redirect('http://localhost:3000/payment/cancel');
+}
