@@ -84,4 +84,17 @@ module.exports.initPayment = async (req, res) => {
 
 module.exports.ipn = async (req, res) => {
     console.log(req.body);
+    console.log('you received a new ipn message');
+}
+
+module.exports.paymentSuccess = async (req, res) => {
+    res.send("<h1>payment success</h1>");
+}
+
+module.exports.paymentFail = async (req, res) => {
+    res.send("<h1>payment fail</h1>");
+}
+
+module.exports.paymentCancel = async (req, res) => {
+    res.send("<h1>payment cancel</h1>");   
 }
