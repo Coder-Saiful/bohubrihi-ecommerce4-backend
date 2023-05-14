@@ -1,25 +1,45 @@
 const {
     PaymentSession
 } = require('ssl-commerz-node');
-const { Cart } = require('../models/cart');
-const { Profile } = require('../models/profile');
+const {
+    Cart
+} = require('../models/cart');
+const { Order } = require('../models/order');
+const {
+    Payment
+} = require('../models/payment');
+const {
+    Profile
+} = require('../models/profile');
 
 module.exports.initPayment = async (req, res) => {
     const payment = new PaymentSession(true, process.env.SSL_COMMERZ_STORE_ID, process.env.SSL_COMMERZ_STORE_PASSWORD);
 
     const userId = req.user._id;
 
-    const cartItems = await Cart.find({user: userId})
+    const cartItems = await Cart.find({
+            user: userId
+        })
         .populate('product', 'name');
-    
+
     const total_amount = cartItems.map(item => item.count * item.price)
         .reduce((a, b) => a + b, 0);
 
     const tran_id = '_' + Math.random().toString(36).substr(2, 9) + (new Date().getTime());
 
-    const profile = await Profile.findOne({user: userId});
+    const profile = await Profile.findOne({
+        user: userId
+    });
 
-    const {phone, address1, address2, city, state, postcode, country} = profile;
+    const {
+        phone,
+        address1,
+        address2,
+        city,
+        state,
+        postcode,
+        country
+    } = profile;
 
     const total_item = cartItems.map(item => item.count)
         .reduce((a, b) => a + b, 0);
@@ -79,12 +99,32 @@ module.exports.initPayment = async (req, res) => {
     });
 
     const response = await payment.paymentInit();
+
+    const order = new Order({
+        cartItems: cartItems,
+        transaction_id: tran_id,
+        address: profile,
+        user: userId
+    });
+
+    if (response.status === 'SUCCESS') {
+        order.sessionKey = response.sessionKey;
+        await order.save();
+    }
     return res.status(200).send(response);
 }
 
 module.exports.ipn = async (req, res) => {
-    console.log(req.body);
-    console.log('you received a new ipn message');
+    const payment = new Payment(req.body);
+    const tran_id = payment.tran_id;
+    if (payment.status === 'VALID') {
+        const order = await Order.updateOne({transaction_id: tran_id}, {status: 'Complete'});
+        await Cart.deleteMany(order.cartItems);
+    } else {
+        await Order.deleteOne({transaction_id: tran_id});
+    }
+    await payment.save();
+    return res.status(200).send({message: 'Payment information saved successfully.'});
 }
 
 module.exports.paymentSuccess = async (req, res) => {
@@ -96,5 +136,5 @@ module.exports.paymentFail = async (req, res) => {
 }
 
 module.exports.paymentCancel = async (req, res) => {
-    res.redirect('http://localhost:3000/payment/cancel');  
+    res.redirect('http://localhost:3000/payment/cancel');
 }
