@@ -21,7 +21,7 @@ module.exports.Order = model('Order', new Schema({
         postcode: Number,
         country: String
     },
-    staus: {
+    status: {
         type: String,
         enum: ["Pending", "Complete"],
         default: "Pending"
